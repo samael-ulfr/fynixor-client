@@ -32,7 +32,6 @@ export default function SignInCard() {
 
   // 👇 Replace with your real auth check (cookie, context, etc.)
   const isAuthenticated = isUserAuthenticated();
-  console.log(isAuthenticated);
   if (isAuthenticated) {
     const redirectPath =
       (location.state as { from?: Location })?.from?.pathname || '/profile';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeSwitcher } from '@/context/ThemeSwitcher'; // assuming you already have this
 import PrimaryBtn from '@/shared/PrimaryBtn';
-import { handleSignOutApi } from '@/services/AuthServices';
+import { handleSignOutApi } from '@/services/authServices';
 import toast from 'react-hot-toast';
 
 export default function Header() {
@@ -32,7 +32,7 @@ export default function Header() {
   };
 
   return (
-    <header className="flex w-full items-center justify-between border-b bg-white p-2 shadow-md dark:border-gray-700 dark:bg-gray-900">
+    <header className="mb-2 flex w-full items-center justify-between border-b bg-white p-2 shadow-md dark:border-gray-700 dark:bg-gray-900">
       {/* Logo or App Name */}
       <h1 className="text-xl font-bold text-gray-900 dark:text-white">
         Fynixor

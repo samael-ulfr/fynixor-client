@@ -30,7 +30,6 @@ function Profile() {
     fetchProfileDetails();
   }, []);
 
-  console.log('User Profile:', userProfile);
   const { firstName, lastName, email, role, createdAt } = userProfile;
 
   const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {

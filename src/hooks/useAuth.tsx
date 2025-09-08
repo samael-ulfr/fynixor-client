@@ -1,5 +1,5 @@
-import { handleSignInApi } from '@/services/authServices';
-import { SignInErrorsTypes } from '@/types/AuthTypes';
+import { handleSignInApi, handleSignUpApi } from '@/services/authServices';
+import { SignInErrorsTypes, SignUpPayloadTypes } from '@/types/AuthTypes';
 import { signInSchema } from '@/utils/schemas/signInSchema';
 import Cookies from 'js-cookie';
 import React from 'react';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 function useAuth() {
   const navigate = useNavigate();
+
   async function handleSignIn(
     e: React.FormEvent,
     username: string,
@@ -71,9 +72,47 @@ function useAuth() {
       return true;
     }
   }
+
+  async function handleSignUp(
+    { firstName, lastName, email, password }: SignUpPayloadTypes,
+    setErrors: any,
+    handleToggleAuthForm: (state: string) => void,
+  ) {
+    setErrors({ username: '', password: '' });
+
+    toast.loading('Creating account...', { id: 'signUp' });
+    try {
+      const payload = { firstName, lastName, email, password };
+      await handleSignUpApi({ signUpPayload: payload });
+      toast.success('Account Created successfully!', { id: 'signUp' });
+      handleToggleAuthForm('login');
+    } catch (err) {
+      console.error('sign up error:', err);
+      if (
+        err &&
+        typeof err === 'object' &&
+        'response' in err &&
+        err.response &&
+        typeof err.response === 'object' &&
+        'data' in err.response &&
+        err.response.data &&
+        typeof err.response.data === 'object' &&
+        'error' in err.response.data
+      ) {
+        toast.error(
+          (err as { response: { data: { error: string } } }).response.data
+            .error,
+          { id: 'login' },
+        );
+      } else {
+        toast.error('An unexpected error occurred.', { id: 'login' });
+      }
+    }
+  }
   return {
     handleSignIn,
     isUserAuthenticated,
+    handleSignUp,
   };
 }
 

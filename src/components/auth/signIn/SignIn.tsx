@@ -8,8 +8,10 @@ import useAuth from '@/hooks/useAuth';
 import Loader from '@/components/common/Loader';
 import PrimaryBtn from '@/shared/PrimaryBtn';
 import { Navigate, useLocation } from 'react-router-dom';
-
-export default function SignInCard() {
+interface SignInCardProps {
+  handleToggleAuthForm: (state: string) => void;
+}
+export default function SignInCard({ handleToggleAuthForm }: SignInCardProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -116,7 +118,19 @@ export default function SignInCard() {
           >
             Sign In
           </button>
-        </form>
+        </form>{' '}
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <button
+              type="button"
+              className="font-medium text-primary hover:underline"
+              onClick={() => handleToggleAuthForm('signup')}
+            >
+              Sign Up
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

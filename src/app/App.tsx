@@ -1,5 +1,5 @@
 // src/App.tsx
-import SignIn from '@/components/auth/signIn/SignIn';
+import Auth from '@/components/auth/Auth';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import Home from '@/pages/home/Home';
 import Profile from '@/pages/profile/Profile';
@@ -14,7 +14,7 @@ function AppContent() {
   const routes = [
     {
       path: UIRoutes.HOME,
-      element: <SignIn />,
+      element: <Auth />,
     },
     {
       path: UIRoutes.PORFILE,

@@ -2,72 +2,38 @@ import { useState } from 'react';
 import Joi from 'joi';
 import { Eye, EyeOff } from 'lucide-react';
 import { ThemeSwitcher } from '@/context/ThemeSwitcher';
+import { signInSchema } from '@/utils/schemas/signInSchema';
+import { SignInErrorsTypes } from '@/types/AuthTypes';
+import useAuth from '@/hooks/useAuth';
+import Loader from '@/components/common/Loader';
 
 export default function SignInCard() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{
-    username?: string;
-    password?: string;
-  }>({});
-
-  // Joi schema
-  const schema = Joi.object({
-    username: Joi.string()
-      .email({ tlds: { allow: false } })
-      .required()
-      .messages({
-        'string.email': 'Please enter a valid email address.',
-        'string.empty': 'Email is required.',
-      }),
-    password: Joi.string()
-      .min(6)
-      .pattern(/(?=.*[a-z])/)
-      .pattern(/(?=.*[A-Z])/)
-      .pattern(/(?=.*\d)/)
-      .pattern(/(?=.*[@$!%*?&])/)
-      .required()
-      .messages({
-        'string.empty': 'Password is required.',
-        'string.min': 'Password must be at least 6 characters.',
-        'string.pattern.base':
-          'Password must include uppercase, lowercase, number, and special character.',
-      }),
+  const [errors, setErrors] = useState<SignInErrorsTypes>({
+    username: '',
+    password: '',
   });
+  const [loading, setLoading] = useState(false); // ✅ new state
+  const { handleSignIn } = useAuth();
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = schema.validate(
-      { username, password },
-      { abortEarly: false },
-    );
-    if (error) {
-      const errorObj: typeof errors = {};
-      error.details.forEach((err) => {
-        const key = err.path[0] as 'username' | 'password';
-        errorObj[key] = err.message;
-      });
-      setErrors(errorObj);
-    } else {
-      setErrors({});
-      console.log('Login success:', { username, password });
-    }
+    setLoading(true);
+    await handleSignIn(e, username, password, errors, setErrors);
+    setLoading(false);
   };
 
   return (
-    <div
-      className={`flex min-h-screen items-center justify-center bg-background transition-colors`}
-    >
+    <div className="relative flex min-h-screen items-center justify-center bg-background transition-colors">
       <ThemeSwitcher />
-      <div
-        className={`w-full max-w-md rounded-xl bg-card/80 p-6 shadow-soft ring-1 ring-border backdrop-blur transition-colors sm:p-8`}
-      >
+      {loading && <Loader />}
+      <div className="w-full max-w-md rounded-xl bg-card/80 p-6 shadow-soft ring-1 ring-border backdrop-blur transition-colors sm:p-8">
         <h2 className="mb-6 text-center text-xl font-semibold text-foreground sm:text-2xl">
           Sign In
         </h2>
-
-        <form className="flex flex-col gap-4" onSubmit={handleSignIn}>
+        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           {/* Email */}
           <div className="flex flex-col">
             <label

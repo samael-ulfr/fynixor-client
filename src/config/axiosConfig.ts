@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // Use env variable
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Use env variable
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,4 +26,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api;
+export const baseAPI = api;

@@ -1,4 +1,4 @@
-import { handleSignInApi, handleSignUpApi } from '@/services/authServices';
+import { handleSignInApi, handleSignUpApi } from '@/services/authService';
 import { SignInErrorsTypes, SignUpPayloadTypes } from '@/types/AuthTypes';
 import { signInSchema } from '@/utils/schemas/signInSchema';
 import Cookies from 'js-cookie';

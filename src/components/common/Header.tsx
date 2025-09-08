@@ -1,8 +1,6 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeSwitcher } from '@/context/ThemeSwitcher'; // assuming you already have this
 import PrimaryBtn from '@/shared/PrimaryBtn';
-import { handleSignOutApi } from '@/services/authServices';
+import { handleSignOutApi } from '@/services/authService';
 import toast from 'react-hot-toast';
 
 export default function Header() {

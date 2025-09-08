@@ -1,6 +1,7 @@
 import { handleSignInApi } from '@/services/AuthServices';
 import { SignInErrorsTypes } from '@/types/AuthTypes';
 import { signInSchema } from '@/utils/schemas/signInSchema';
+import Cookies from 'js-cookie';
 import React from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +39,7 @@ function useAuth() {
         toast.success('Logged in successfully!', { id: 'login' });
         navigate('/profile');
       } catch (err) {
-        console.log('Login error:', err);
+        console.error('Login error:', err);
         if (
           err &&
           typeof err === 'object' &&
@@ -61,8 +62,18 @@ function useAuth() {
       }
     }
   }
+
+  function isUserAuthenticated() {
+    const token = Cookies.get('uitoken');
+    if (!token) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   return {
     handleSignIn,
+    isUserAuthenticated,
   };
 }
 

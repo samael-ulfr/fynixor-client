@@ -1,8 +1,10 @@
 // AuthRoute.tsx
 import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+
 import Loader from '@/components/common/Loader';
+import Header from '@/components/common/Header';
+import useAuth from '@/hooks/useAuth';
 
 interface AuthRouteProps {
   children: ReactNode;
@@ -11,11 +13,11 @@ interface AuthRouteProps {
 const AuthRoute = ({ children }: AuthRouteProps) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { isUserAuthenticated } = useAuth();
 
   useEffect(() => {
-    const token = Cookies.get('uitoken');
-
-    if (!token) {
+    const isUserLoggedIn = isUserAuthenticated();
+    if (!isUserLoggedIn) {
       navigate('/');
     } else {
       setLoading(false);
@@ -26,7 +28,13 @@ const AuthRoute = ({ children }: AuthRouteProps) => {
     return <Loader />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {' '}
+      <Header />
+      {children}
+    </>
+  );
 };
 
 export default AuthRoute;

@@ -6,6 +6,8 @@ import { signInSchema } from '@/utils/schemas/signInSchema';
 import { SignInErrorsTypes } from '@/types/AuthTypes';
 import useAuth from '@/hooks/useAuth';
 import Loader from '@/components/common/Loader';
+import PrimaryBtn from '@/shared/PrimaryBtn';
+import { Navigate, useLocation } from 'react-router-dom';
 
 export default function SignInCard() {
   const [username, setUsername] = useState('');
@@ -24,6 +26,18 @@ export default function SignInCard() {
     await handleSignIn(e, username, password, errors, setErrors);
     setLoading(false);
   };
+
+  const location = useLocation();
+  const { isUserAuthenticated } = useAuth();
+
+  // 👇 Replace with your real auth check (cookie, context, etc.)
+  const isAuthenticated = isUserAuthenticated();
+  console.log(isAuthenticated);
+  if (isAuthenticated) {
+    const redirectPath =
+      (location.state as { from?: Location })?.from?.pathname || '/profile';
+    return <Navigate to={redirectPath} replace />;
+  }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-background transition-colors">
@@ -83,6 +97,15 @@ export default function SignInCard() {
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
+
+            <PrimaryBtn
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-foreground"
+              onClick={() => setShowPassword((prev) => !prev)}
+              title={showPassword ? 'Hide password' : 'Show password'}
+              label={showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            ></PrimaryBtn>
+
             {errors.password && (
               <p className="mt-1 text-xs text-red-500">{errors.password}</p>
             )}
